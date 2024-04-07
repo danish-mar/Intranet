@@ -4,6 +4,12 @@
 
 
     <item
+        android:id="@+id/action_history"
+        android:title="History"
+        />
+
+
+    <item
         android:id="@+id/action_back"
         android:icon="@android:drawable/ic_menu_revert"
         android:title="Back"
@@ -18,5 +24,7 @@
         android:icon="@drawable/ic_menu_forward"
         android:title="Forward"
         app:showAsAction="ifRoom"/>
+
+
 
 </menu>

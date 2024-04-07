@@ -1,5 +1,6 @@
 package com.electro.intranet
 
+
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -13,13 +14,26 @@ import androidx.appcompat.app.AppCompatActivity
 class MainActivity : AppCompatActivity() {
     private lateinit var webView: WebView
     private lateinit var urlEditText: EditText
+    private lateinit var databaseConnector: DatabaseConnector
+
+
+
+    private val ramMonitorServiceIntent by lazy {
+        Intent(this, RamMonitorService::class.java)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        // Start RamMonitorService
+        val serviceIntent = Intent(this, RamMonitorService::class.java)
+        startService(serviceIntent)
+
+
         webView = findViewById(R.id.wb_webView)
         urlEditText = findViewById(R.id.urlEditText)
+        databaseConnector = DatabaseConnector(this)
 
         webView.settings.javaScriptEnabled = true
         webView.settings.safeBrowsingEnabled = false
@@ -27,6 +41,12 @@ class MainActivity : AppCompatActivity() {
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
                 urlEditText.setText(url)
+
+                // Add history entry when page finishes loading
+                url?.let { title ->
+                    val timestamp = System.currentTimeMillis()
+                    databaseConnector.addHistoryEntry(url, title, timestamp)
+                }
             }
         }
 
@@ -75,11 +95,23 @@ class MainActivity : AppCompatActivity() {
                 }
                 return true
             }
+            R.id.action_history -> {
+                // Start HistoryActivity
+                val intent = Intent(this, HistoryActivity::class.java)
+                startActivity(intent)
+                return true
+            }
         }
         return super.onOptionsItemSelected(item)
     }
 
     private fun isValidUrl(url: String): Boolean {
         return url.startsWith("http://") || url.startsWith("https://") || url.startsWith("www")
+    }
+
+
+    override fun onDestroy() {
+        stopService(ramMonitorServiceIntent)
+        super.onDestroy()
     }
 }
