@@ -1,4 +1,4 @@
-![Intranet_browser_icon](app/src/main/res/drawable/sticker_18.png){:height="100px" width="100px"}
+![Intranet_browser_icon](app/src/main/res/drawable/kokomi_resized.png)
 # Intranet Browser
 > My first Android APP
 ## Overview
