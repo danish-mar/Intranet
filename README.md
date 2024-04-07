@@ -1,3 +1,4 @@
+![app/src/main/res/drawable/sticker_18.png]
 # Intranet Browser
 > My first Android APP
 ## Overview
